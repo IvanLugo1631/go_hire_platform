@@ -1,0 +1,103 @@
+{{ template "header.go.html" . }}
+{{ template "progressbar.go.html" . }}
+
+<div class="max-w-7xl mx-auto bg-gray-50 min-h-screen p-6">
+    <!-- Success Alert -->
+    <div id="success-alert" class="mb-4 bg-green-50 border-green-200 hidden">
+      <div class="flex items-center">
+        <svg class="h-4 w-4 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+          <path fill-rule="evenodd" d="M13.293 6.293a1 1 0 011.414 1.414L10 11.414 7.293 8.707a1 1 0 011.414-1.414L10 9.586l3.293-3.293z" clip-rule="evenodd"/>
+        </svg>
+        <p class="text-green-700 ml-2">Employment information saved successfully!</p>
+      </div>
+    </div>
+    
+    <div class="grid grid-cols-12 gap-6">
+      <!-- Side Navigation -->
+      <div class="col-span-12 lg:col-span-3">
+        <div class="bg-white rounded-lg shadow p-4 space-y-4">
+          <h2 class="text-lg font-semibold text-gray-900">Employment History</h2>
+          <div class="space-y-2" id="employment-list">
+            <!-- Employment buttons will be dynamically inserted here -->
+          </div>
+          <button id="add-position" class="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-blue-600 rounded-md shadow-sm text-sm font-medium text-blue-600 bg-white hover:bg-blue-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+            <svg class="h-4 w-4 mr-2" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fill-rule="evenodd" d="M10 5a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0v-4H5a1 1 0 110-2h4V6a1 1 0 011-1z" clip-rule="evenodd"/>
+            </svg>
+            Add Position
+          </button>
+        </div>
+      </div>
+  
+      <!-- Main Form -->
+      <div class="col-span-12 lg:col-span-9">
+        <div class="bg-white rounded-lg shadow">
+          <div class="p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h3 class="text-xl font-semibold text-gray-900" id="job-title">Position 1</h3>
+              <button id="remove-position" class="text-red-600 hover:text-red-700 p-2 rounded-full hover:bg-red-50 hidden">
+                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                  <path fill-rule="evenodd" d="M14.293 6.293a1 1 0 011.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 011.414-1.414L10 8.586l4.293-4.293z" clip-rule="evenodd"/>
+                </svg>
+              </button>
+            </div>
+  
+            <div class="space-y-6">
+              <!-- Basic Information -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Employer *</label>
+                  <input type="text" id="employer" class="mt-1 block w-full rounded-md px-3 py-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Employer Name">
+                  <p id="employer-error" class="mt-1 text-sm text-red-600 hidden">Employer is required</p>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Title *</label>
+                  <input type="text" id="title" class="mt-1 block w-full rounded-md px-3 py-2 border-gray-300 focus:border-blue-500 focus:ring-blue-500" placeholder="Title">
+                  <p id="title-error" class="mt-1 text-sm text-red-600 hidden">Title is required</p>
+                </div>
+              </div>
+  
+              <!-- Additional Details -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Location</label>
+                  <input type="text" id="location" class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500" placeholder="City, State">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Website</label>
+                  <input type="url" id="website" class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500" placeholder="https://example.com">
+                </div>
+              </div>
+  
+              <!-- Dates and Employment Status -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">Start Date *</label>
+                  <input type="date" id="startDate" class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700">End Date</label>
+                  <input type="date" id="endDate" class="mt-1 block w-full rounded-md border-gray-300 px-3 py-2 focus:border-blue-500 focus:ring-blue-500">
+                </div>
+                <div class="flex items-center mt-6">
+                  <input type="checkbox" id="currentEmployer" class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                  <label for="currentEmployer" class="ml-2 block text-sm text-gray-700">Current Employer</label>
+                </div>
+              </div>
+  
+              <!-- Submit Button -->
+              <div class="flex justify-end space-x-4 mt-6">
+                <button type="button" id="save-position" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                  Save Position
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+
+  
+{{ template "footer.go.html" . }}

@@ -1,0 +1,136 @@
+{{ template "header.go.html" . }}
+{{ template "progressbar.go.html" . }}
+
+<div class="max-w-full overflow-x-hidden">
+    <div class="max-w-2xl mx-auto bg-white shadow sm:rounded-lg mt-6 border-2 border-gray-400">
+        <div class="px-4 py-5 sm:p-6">
+            <div class="space-y-6">
+                <!-- Terms and Conditions -->
+                <div class="p-4 border-2 border-blue-500 rounded-lg bg-gray-50">
+                    <label class="block text-sm font-medium text-gray-700 md:text-lg">
+                        Terms and Conditions
+                    </label>
+                    <div class="mt-1 text-sm text-gray-600 md:text-base max-h-60 overflow-y-auto">
+                        <p>
+                            By signing below, you agree to the terms and conditions outlined in this document.
+                        </p>
+                        <div class="mt-4 border-t border-gray-300 pt-4">
+                            <p class="text-gray-600">
+                                <strong>Terms and Conditions</strong>
+                            </p>
+                            <p>
+                                By using our service, you agree to the following terms and conditions:
+                            </p>
+                            <strong>1. General Terms</strong>
+                            <ul class="list-disc pl-6">
+                                <li><strong>Acceptance of Terms:</strong> By accessing or using our service, you agree to comply with these terms.</li>
+                                <li><strong>Modifications:</strong> We may update these terms at any time. Changes will be posted on this page.</li>
+                                <li><strong>Eligibility:</strong> You must be at least 18 years old to use this service.</li>
+                            </ul>
+                            <strong>2. Privacy and Data Protection</strong>
+                            <p>Your privacy is important to us. The following practices apply:</p>
+                            <ol class="list-decimal pl-6">
+                                <li><strong>Data Collection:</strong> We collect personal information when you register or use our service.</li>
+                                <li><strong>Data Usage:</strong> Your information will be used to provide services and improve user experience.</li>
+                                <li><strong>Data Sharing:</strong> We do not share your personal data with third parties without your consent.</li>
+                            </ol>
+                            <p>
+                                If you have any questions regarding these Terms and Conditions, please contact us at
+                                <strong>support@example.com</strong>.
+                            </p>
+                            <p><em>Last updated: [Date]</em></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Consent Checkbox -->
+                <div class="text-sm md:text-base border-t-2 border-gray-400 pt-4">
+                    <input type="checkbox" id="consent-checkbox" class="mr-2">
+                    <label for="consent-checkbox" class="font-medium text-gray-700">
+                        I agree to the Terms and Conditions
+                    </label>
+                </div>
+
+                <!-- Name Input -->
+                <div class="text-sm md:text-base border-t-2 border-gray-400 pt-4">
+                    <label for="full-name" class="block font-medium text-gray-700">
+                        Full Name
+                    </label>
+                    <input
+                        type="text"
+                        id="full-name"
+                        name="full-name"
+                        class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm md:text-lg"
+                    >
+                </div>
+
+                <!-- Digital Signature -->
+                <div id="signature-section" class="hidden text-sm md:text-base border-t-2 border-gray-400 pt-4">
+                    <h1 class="text-lg font-semibold text-gray-700">E-Signature</h1>
+                    <p class="text-sm text-gray-600">Click "Sign" to open the signature pad.</p>
+                    <div class="mt-4 flex justify-center">
+                        <canvas
+                            id="sig-canvas"
+                            class="border-2 border-dotted border-gray-400 rounded-lg hidden"
+                            width="620"
+                            height="160"
+                        >
+                            Get a better browser, bro.
+                        </canvas>
+                    </div>
+                    <div class="mt-4 flex justify-between">
+                        <button 
+                            id="sig-submitBtn" 
+                            class="px-4 py-2 text-white bg-blue-600 rounded-md shadow hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 hidden md:text-lg sm:px-3 sm:py-1 sm:text-sm"
+                        >
+                            Submit Signature
+                        </button>
+                        <button 
+                            id="sig-clearBtn" 
+                            class="px-4 py-2 text-gray-700 bg-gray-200 rounded-md shadow hover:bg-gray-300 focus:ring-2 focus:ring-gray-400 focus:ring-offset-2 hidden md:text-lg sm:px-3 sm:py-1 sm:text-sm"
+                        >
+                            Clear Signature
+                        </button>
+                    </div>
+                    
+                    <button
+                        id="activate-signature"
+                        class="px-4 py-2 mt-4 text-white bg-green-600 rounded-md shadow hover:bg-green-700 focus:ring-2 focus:ring-green-500 focus:ring-offset-2 md:text-lg mx-auto"></button>
+                    </button>
+                </div>
+
+                <!-- Navigation Buttons -->
+                <div class="flex justify-between border-t-2 border-gray-400 pt-4">
+                    <button
+                        type="button"
+                        onclick="setCurrentStep(1)"
+                        class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 md:text-lg"
+                    >
+                        Back
+                    </button>
+                    <button
+                        type="button"
+                        onclick="setCurrentStep(3)"
+                        class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 md:text-lg"
+                    >
+                        Next
+                        <svg
+                            class="ml-2 h-4 w-4"
+                            fill="none"
+                            stroke="currentColor"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 24 24"
+                            stroke-width="2"
+                        >
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{ template "footer.go.html" . }}
+
+

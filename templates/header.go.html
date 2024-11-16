@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link href="/static/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="/static/js/pii.js" defer></script>
+    <script src="/static/js/signature.js" defer></script>
+    <script src="/static/js/employment.js" defer></script>
+    <script src="signature-pad.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+    <div class="flex-grow">
+        {{ template "navbar.go.html" . }}
+
+   
