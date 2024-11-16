@@ -1,0 +1,38 @@
+/* Progress Bar Styles */
+.step {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.step .rounded-full {
+    transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+}
+
+.step.active .rounded-full {
+    background-color: #4a90e2; /* Blue for active steps */
+    border-color: #4a90e2;
+    color: #ffffff;
+}
+
+.step.completed .rounded-full {
+    background-color: #88c0d0; /* Light blue for completed steps */
+    border-color: #88c0d0;
+    color: #ffffff;
+}
+
+.step .line {
+    background-color: var(--line-color, #d1d5db); /* Default gray */
+}
+
+.step.completed .line {
+    --line-color: #88c0d0; /* Completed light blue */
+}
+
+.step span {
+    position: absolute;
+    top: 3.5rem;
+    font-size: 1rem; /* Increased size */
+    color: #374151; /* Default text color */
+    white-space: nowrap;
+}
