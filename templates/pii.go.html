@@ -1,58 +1,58 @@
 {{ template "header.go.html" . }}
 {{ template "progressbar.go.html" . }}
 
-<!-- Navigation -->
+<!-- PII -->
 <div class="max-w-3xl mx-auto bg-white shadow-lg sm:rounded-lg mt-6 border-2 border-gray-300">
     <div class="px-6 py-8 sm:p-10">
-        <form class="space-y-6">
+        <form id="piiForm" class="space-y-6">
             <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
                 <div>
                     <label class="block text-sm font-medium text-gray-800">First Name</label>
-                    <input type="text" required
+                    <input name="firstName" type="text" id="firstName" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-800">Last Name</label>
-                    <input type="text" required
+                    <input name="lastName" type="text" id="lastName" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-800">Date of Birth</label>
-                    <input type="date" required
+                    <input name="dob" type="date" id="dob" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-800">Email</label>
-                    <input type="email" required
+                    <input name="email" type="email" id="email" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div class="sm:col-span-2">
                     <label class="block text-sm font-medium text-gray-800">Address</label>
-                    <input type="text" required
+                    <input name="address" type="text" id="address" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-800">City</label>
-                    <input type="text" required
+                    <input name="city" type="text" id="city" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
                 <div>
                     <label class="block text-sm font-medium text-gray-800">State</label>
-                    <input type="text" required
+                    <input name="state" type="text" id="state" required
                         class="mt-1 block w-full rounded-md border border-gray-400 px-4 py-3 shadow-md focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500" />
                 </div>
             </div>
             <div class="flex justify-end">
-                <button type="button" onclick="setCurrentStep(2)"
-                    class="inline-flex items-center px-5 py-3 border border-gray-300 text-sm font-medium rounded-md shadow-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                    Next
-                    <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-                        aria-hidden="true">
-                        <path fill-rule="evenodd"
-                            d="M10 5a1 1 0 011 1v7.586l2.707-2.707a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V6a1 1 0 011-1z"
-                            clip-rule="evenodd"></path>
-                    </svg>
-                </button>
+                <a href="javascript:void(0)" onclick="submitFormAndGoToSignature()">
+                    <button type="button" class="inline-flex items-center px-5 py-3 border border-gray-300 text-sm font-medium rounded-md shadow-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Next
+                        <svg class="ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd"
+                                  d="M10 5a1 1 0 011 1v7.586l2.707-2.707a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 111.414-1.414L9 12.586V6a1 1 0 011-1z"
+                                  clip-rule="evenodd"></path>
+                        </svg>
+                    </button>
+                </a> 
             </div>
         </form>
     </div>
