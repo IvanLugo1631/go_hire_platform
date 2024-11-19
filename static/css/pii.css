@@ -1,0 +1,12 @@
+.error {
+    border-color: red !important;
+    background-color: #ffe6e6;
+}
+.error + .error-message {
+    display: block;
+}
+.error-message {
+    color: red;
+    font-size: 0.875rem;
+    display: none;
+}
