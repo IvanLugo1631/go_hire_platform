@@ -15,37 +15,41 @@ document.addEventListener("DOMContentLoaded", function() {
             menuButton.setAttribute('aria-expanded', !isExpanded);
         });
     }
+z
+});
 
     // Submit form and go to signature
     function submitFormAndGoToSignature() {
-        const formData = new FormData(document.getElementById('piiForm'));
+        const form = document.getElementById('piiForm');
+        const formData = new FormData(form);
+
         fetch('/personal-information', {
             method: 'POST',
-            body: formData,
+            body: formData
         })
-        .then(response => response.json())
+        .then(async response => {
+            if (!response.ok) {
+                // Log the actual error response
+                const text = await response.text();
+                throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success) {
-                console.log('Data saved successfully.');
+                console.log('Server response:', data);
                 window.location.href = '/signature';
                 // Update the current step to reflect progress and save it
                 const currentStep = 2;
                 localStorage.setItem('currentStep', currentStep);
                 setCurrentStep(currentStep);
             } else {
-                alert('There was an error saving your data.');
+                console.error('Server indicated failure:', data);
+                alert('There was an error saving your data: ' + (data.message || 'Unknown error'));
             }
         })
         .catch(error => {
             console.error('Error submitting form:', error);
-            alert('There was an error submitting the form.');
+            alert('There was an error submitting the form: ' + error.message);
         });
     }
-
-    // Listen for the click event on the submit button
-    const submitButton = document.querySelector('a[href="javascript:void(0)"]');
-    if (submitButton) {
-        submitButton.addEventListener('click', submitFormAndGoToSignature);
-    }
-});
-

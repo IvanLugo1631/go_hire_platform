@@ -3,10 +3,11 @@ package main
 import (
 	"embed"
 	"encoding/json"
-	"fmt"
+
 	"html/template"
 	"log"
 	"net/http"
+	"sync"
 )
 
 //go:embed templates/*
@@ -22,32 +23,68 @@ type PageData struct {
 // Handle personal information form (GET and POST)
 func handlePersonalInformation(w http.ResponseWriter, r *http.Request) {
     if r.Method == http.MethodPost {
-        // Parse form data
-        err := r.ParseForm()
+        // Debug: Log the content type
+        log.Printf("Received Content-Type: %s", r.Header.Get("Content-Type"))
+
+        // Parse the multipart form
+        err := r.ParseMultipartForm(10 << 20) // 10 MB max memory
         if err != nil {
-            http.Error(w, "Unable to parse form", http.StatusBadRequest)
+            log.Printf("Error parsing multipart form: %v", err)
+            http.Error(w, "Unable to parse form: "+err.Error(), http.StatusBadRequest)
             return
         }
-        fmt.Println(r.Form)
 
+        // Access form values
+        contact := Contact{
+            FirstName: r.FormValue("first-name"),
+            LastName:  r.FormValue("last-name"),
+            Email:     r.FormValue("email"),
+            State:     r.FormValue("state"),
+        }
+
+        // Validate required fields
+        if contact.FirstName == "" || contact.LastName == "" || contact.Email == "" {
+            log.Printf("Missing required fields: FirstName='%s', LastName='%s', Email='%s'",
+                contact.FirstName, contact.LastName, contact.Email)
+            http.Error(w, "Missing required fields", http.StatusBadRequest)
+            return
+        }
+
+        // Store the contact
+        contactStore.Lock.Lock()
+        contact.ID = contactStore.NextID
+        contactStore.Contacts[contactStore.NextID] = contact
+        contactStore.NextID++
+        contactStore.Lock.Unlock()
+
+        // Debug: Log the stored contact
+        log.Printf("Successfully stored contact: %+v", contact)
+
+        // Send JSON response
         response := map[string]interface{}{
             "success": true,
-            "message": "Data saved successfully.",
+            "message": "Data saved successfully",
+            "contact": contact,
         }
         w.Header().Set("Content-Type", "application/json")
-        json.NewEncoder(w).Encode(response)
+        if err := json.NewEncoder(w).Encode(response); err != nil {
+            log.Printf("Error encoding response: %v", err)
+            http.Error(w, "Error encoding response", http.StatusInternalServerError)
+            return
+        }
         return
     }
 
-    // Handle GET request to render the personal information form
+    // Handle GET request
     data := PageData{
         PageTitle: "Personal Information",
     }
-    err := tpl.Lookup("pii.go.html").Execute(w, data)
-    if err != nil {
+    if err := tpl.Lookup("pii.go.html").Execute(w, data); err != nil {
+        log.Printf("Error executing template: %v", err)
         http.Error(w, err.Error(), http.StatusInternalServerError)
     }
 }
+
 
 
 func main() {
@@ -150,3 +187,21 @@ type BGOrderData struct {
 	ContactEmail     string `json:"contact_email,omitempty"`
 	}
 	
+	type ContactStore struct {
+		Contacts map[int64]Contact
+		NextID   int64
+		Lock     sync.Mutex
+	}
+	
+	type Contact struct {
+		ID        int64
+		FirstName string
+		LastName  string
+		Email     string
+		State   string
+	}
+	
+	var contactStore = ContactStore{
+		Contacts: make(map[int64]Contact),
+		NextID:   1,
+	}
