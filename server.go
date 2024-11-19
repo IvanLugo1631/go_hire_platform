@@ -2,95 +2,19 @@ package main
 
 import (
 	"embed"
-	"encoding/json"
 	"html/template"
 	"log"
 	"net/http"
-	"sync"
+	"onboarding/handlers"
+	"onboarding/types"
 )
 
 //go:embed templates/*
 var templateFS embed.FS
 
-var tpl *template.Template
-
-type PageData struct {
-	Title     string
-	PageTitle string
-}
-
-type PersonalInformationStore struct {
-	Contacts map[int64]PersonalInformation
-	NextID   int64
-	Lock     sync.Mutex
-}
-
-type PersonalInformation struct {
-	ID        int64
-	FirstName string
-	LastName  string
-	Email     string
-	State     string
-}
-
-var personalInfoStore = PersonalInformationStore{
-	Contacts: make(map[int64]PersonalInformation),
-	NextID:   1,
-}
-
-// Handle personal information form
-func handlePersonalInformation(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		err := r.ParseMultipartForm(10 << 20)
-		if err != nil {
-			log.Printf("Error parsing multipart form: %v", err)
-			http.Error(w, "Unable to parse form: "+err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		info := PersonalInformation{
-			FirstName: r.FormValue("first-name"),
-			LastName:  r.FormValue("last-name"),
-			Email:     r.FormValue("email"),
-			State:     r.FormValue("state"),
-		}
-
-
-		// Store the personal information
-		personalInfoStore.Lock.Lock()
-		info.ID = personalInfoStore.NextID
-		personalInfoStore.Contacts[personalInfoStore.NextID] = info
-		personalInfoStore.NextID++
-		personalInfoStore.Lock.Unlock()
-
-		// Send JSON response
-		response := map[string]interface{}{
-			"success": true,
-			"message": "Data saved successfully",
-			"info":    info,
-		}
-		w.Header().Set("Content-Type", "application/json")
-		if err := json.NewEncoder(w).Encode(response); err != nil {
-			log.Printf("Error encoding response: %v", err)
-			http.Error(w, "Error encoding response", http.StatusInternalServerError)
-			return
-		}
-		return
-	}
-
-	// Handle GET request
-	data := PageData{
-		PageTitle: "Personal Information",
-	}
-	if err := tpl.Lookup("pii.go.html").Execute(w, data); err != nil {
-		log.Printf("Error executing template: %v", err)
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-	}
-}
-
 func main() {
-	var err error
-	tpl, err = template.New("views").ParseFS(templateFS,
+	// Parse templates
+	tpl, err := template.New("views").ParseFS(templateFS,
 		"templates/header.go.html",
 		"templates/footer.go.html",
 		"templates/navbar.go.html",
@@ -104,15 +28,18 @@ func main() {
 		log.Fatalf("Error parsing templates: %v", err)
 	}
 
+	// Set the template for handlers to use
+	handlers.SetTemplate(tpl)
+
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
 	// Route for personal information
-	http.HandleFunc("/personal-information", handlePersonalInformation)
+	http.HandleFunc("/personal-information", handlers.HandlePersonalInformation)
 
 	// Home page
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData{
+		data := types.PageData{
 			PageTitle: "Home",
 		}
 		err := tpl.Lookup("home.go.html").Execute(w, data)
@@ -124,7 +51,7 @@ func main() {
 
 	// Signature page
 	http.HandleFunc("/signature", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData{
+		data := types.PageData{
 			PageTitle: "Signature for Terms and Conditions",
 		}
 		err := tpl.Lookup("signature.go.html").Execute(w, data)
@@ -136,7 +63,7 @@ func main() {
 
 	// Employment page
 	http.HandleFunc("/employment", func(w http.ResponseWriter, r *http.Request) {
-		data := PageData{
+		data := types.PageData{
 			PageTitle: "Employment",
 		}
 		err := tpl.Lookup("employment.go.html").Execute(w, data)
