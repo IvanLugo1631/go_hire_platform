@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"onboarding/handlers"
-	"onboarding/types"
 )
 
 //go:embed templates/*
@@ -34,55 +33,22 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	// Route for personal information
+	// Define routes
+	http.HandleFunc("/", handlers.HandleHome)
 	http.HandleFunc("/personal-information", handlers.HandlePersonalInformation)
-
-	// Home page
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		data := types.PageData{
-			PageTitle: "Home",
-		}
-		err := tpl.Lookup("home.go.html").Execute(w, data)
-		if err != nil {
-			log.Printf("Error rendering template: %s", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		}
-	})
-
-	// Signature page
-	http.HandleFunc("/signature", func(w http.ResponseWriter, r *http.Request) {
-		data := types.PageData{
-			PageTitle: "Signature for Terms and Conditions",
-		}
-		err := tpl.Lookup("signature.go.html").Execute(w, data)
-		if err != nil {
-			log.Printf("Error rendering template: %s", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		}
-	})
-
-	// Employment page
-	http.HandleFunc("/employment", func(w http.ResponseWriter, r *http.Request) {
-		data := types.PageData{
-			PageTitle: "Employment",
-		}
-		err := tpl.Lookup("employment.go.html").Execute(w, data)
-		if err != nil {
-			log.Printf("Error rendering template: %s", err)
-			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
-		}
-	})
+	http.HandleFunc("/signature", handlers.HandleSignature)
+	http.HandleFunc("/employment", handlers.HandleEmployment)
 
 	// Start the server
 	log.Println("Server started at http://0.0.0.0:8089")
 	log.Fatal(http.ListenAndServe(":8089", nil))
 }
 
-type BGOrderData struct {
-	Config Config `json:"config"`
-	// PII // name and stuff
-	SignedBy string `json:"signed_by,omitempty"`
-	VEMP  []EmploymentRequest            `json:"vemp,omitempty"`
+	type BGOrderData struct {
+		Config Config `json:"config"`
+		// PII // name and stuff
+		SignedBy string `json:"signed_by,omitempty"`
+		VEMP  []EmploymentRequest            `json:"vemp,omitempty"`
 	}
 	
 	type Config struct {
