@@ -44,35 +44,35 @@ func main() {
 	log.Fatal(http.ListenAndServe(":8089", nil))
 }
 
-	type BGOrderData struct {
-		Config Config `json:"config"`
-		// PII // name and stuff
-		SignedBy string `json:"signed_by,omitempty"`
-		VEMP  []EmploymentRequest            `json:"vemp,omitempty"`
-	}
-	
-	type Config struct {
-	VEMP struct {
-	Min int `json:"min,omitempty"`
-	Max int `json:"max,omitempty"`
-	}
-	}
-	
-	
-	type EmploymentRequest struct {
-	Employer         string `json:"employer,omitempty"`
-	StaffingAgency   string `json:"staffing_agency,omitempty"`
-	Title            string `json:"title,omitempty"`
-	PhoneNumber      string `json:"phone_number,omitempty"`
-	Location         string `json:"location,omitempty"`
-	Website          string `json:"website,omitempty"`
-	Salary           string `json:"salary,omitempty"`
-	StartDate        string `json:"start_date,omitempty"`
-	EndDate          string `json:"end_date,omitempty"`
-	ReasonForLeaving string `json:"reason_for_leaving,omitempty"`
-	CurrentEmployer  bool   `json:"current_employer,omitempty"`
-	DoNotContact     bool   `json:"do_not_contact,omitempty"`
-	ContactName      string `json:"contact_name,omitempty"`
-	ContactTitle     string `json:"contact_title,omitempty"`
-	ContactEmail     string `json:"contact_email,omitempty"`
-	}
+type BGOrderData struct {
+	Config Config `json:"config"`
+	// PII // name and stuff
+	SignedBy string `json:"signed_by,omitempty"`
+	VEMP  []EmploymentRequest            `json:"vemp,omitempty"`
+}
+
+type Config struct {
+VEMP struct {
+Min int `json:"min,omitempty"`
+Max int `json:"max,omitempty"`
+}
+}
+
+
+type EmploymentRequest struct {
+Employer         string `json:"employer,omitempty"`
+StaffingAgency   string `json:"staffing_agency,omitempty"`
+Title            string `json:"title,omitempty"`
+PhoneNumber      string `json:"phone_number,omitempty"`
+Location         string `json:"location,omitempty"`
+Website          string `json:"website,omitempty"`
+Salary           string `json:"salary,omitempty"`
+StartDate        string `json:"start_date,omitempty"`
+EndDate          string `json:"end_date,omitempty"`
+ReasonForLeaving string `json:"reason_for_leaving,omitempty"`
+CurrentEmployer  bool   `json:"current_employer,omitempty"`
+DoNotContact     bool   `json:"do_not_contact,omitempty"`
+ContactName      string `json:"contact_name,omitempty"`
+ContactTitle     string `json:"contact_title,omitempty"`
+ContactEmail     string `json:"contact_email,omitempty"`
+}
