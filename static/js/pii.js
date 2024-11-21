@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", function() {
             menuButton.setAttribute('aria-expanded', !isExpanded);
         });
     }
-z
 });
 
     // Submit form and go to signature
