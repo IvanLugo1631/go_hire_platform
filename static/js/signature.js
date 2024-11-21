@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const clearBtn = document.getElementById("sig-clearBtn");
 
     let isCanvasInitialized = false;
+    let isSigned = false;
 
     consentCheckbox.addEventListener("change", (e) => {
         if (e.target.checked) {
@@ -31,10 +32,15 @@ document.addEventListener("DOMContentLoaded", () => {
     clearBtn.addEventListener("click", () => {
         const context = sigCanvas.getContext("2d");
         context.clearRect(0, 0, sigCanvas.width, sigCanvas.height);
+        isSigned = false;
+        toggleSubmitButton();
     });
 
     submitBtn.addEventListener("click", () => {
-        const context = sigCanvas.getContext("2d");
+        if (!isSigned) {
+            alert("Please provide your signature before submitting.");
+            return;
+        }
         const dataURL = sigCanvas.toDataURL("image/png");
         alert("Signature submitted! Data URL: " + dataURL);
     });
@@ -60,6 +66,9 @@ document.addEventListener("DOMContentLoaded", () => {
             ctx.lineTo(mousePos.x, mousePos.y);
             ctx.stroke();
             lastPos = mousePos;
+
+            isSigned = true;
+            toggleSubmitButton();
         });
 
         function getMousePos(canvasDom, mouseEvent) {
@@ -70,5 +79,67 @@ document.addEventListener("DOMContentLoaded", () => {
             };
         }
     }
+
+    function toggleSubmitButton() {
+        submitBtn.disabled = !isSigned;
+    }
+    submitBtn.disabled = true;
 });
 
+// Submit form and go to employment
+const submitFormAndGoToEmployment = () => {
+    const form = document.getElementById('signatureForm');
+    const formData = new FormData(form);
+    let hasError = false;
+
+    // Clear previous error styles
+    form.querySelectorAll('.error').forEach(el => {
+        el.classList.remove('error');
+    });
+
+    // Validate required fields
+    const requiredFields = form.querySelectorAll('[required]');
+    requiredFields.forEach(field => {
+        if (!field.value.trim()) {
+            field.classList.add('error');
+            hasError = true;
+        }
+    });
+
+    if (hasError) {
+        // Focus the first invalid field
+        const firstErrorField = form.querySelector('.error');
+        firstErrorField.focus();
+        return;
+    }
+
+    // Proceed to submit the form if no errors
+    fetch('/signature', {
+        method: 'POST',
+        body: formData
+    })
+    .then(async response => {
+        if (!response.ok) {
+            const text = await response.text();
+            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            console.log('Server response:', data);
+            window.location.href = '/employment';
+            const currentStep = 3;
+            localStorage.setItem('currentStep', currentStep);
+            setCurrentStep(currentStep);
+        } else {
+            console.error('Server indicated failure:', data);
+            alert('There was an error saving your data: ' + (data.message || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        console.error('Error submitting form:', error);
+        alert('There was an error submitting the form: ' + error.message);
+    });
+
+};
