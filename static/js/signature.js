@@ -143,17 +143,3 @@ const submitFormAndGoToEmployment = () => {
     });
 
 };
-
-// On page load, populate form fields if data is stored in localStorage
-window.addEventListener('DOMContentLoaded', (event) => {
-    const storedData = localStorage.getItem('piiData');
-    if (storedData) {
-        const formDataObject = JSON.parse(storedData);
-        for (const [key, value] of Object.entries(formDataObject)) {
-            const inputElement = document.querySelector(`[name="${key}"]`);
-            if (inputElement) {
-                inputElement.value = value;
-            }
-        }
-    }
-});
