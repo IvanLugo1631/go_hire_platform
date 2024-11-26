@@ -44,10 +44,15 @@
                 </div>
 
                 <!-- Consent Checkbox -->
-                <div class="text-sm md:text-base border-t-2 border-gray-400 pt-4">
-                    <input type="checkbox" id="consent-checkbox" class="mr-2" required>
-                    <label for="consent-checkbox" class="font-medium text-gray-700">
-                        I agree to the Terms and Conditions
+                <div class="flex items-start space-x-3 mt-6">
+                    <input
+                        type="checkbox"
+                        id="consent-checkbox"
+                        class="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring focus:ring-blue-500"
+                        required
+                    >
+                    <label for="consent-checkbox" class="font-medium text-gray-700 leading-5">
+                        I have read and agree to the <b>Terms and Conditions</b>
                     </label>
                 </div>
 
@@ -75,7 +80,6 @@
                             class="border-2 border-dotted border-gray-400 rounded-lg hidden"
                             width="620"
                             height="160"
-
                         >
                             Get a better browser, bro.
                         </canvas>
@@ -129,5 +133,6 @@
 </div>
 
 {{ template "footer.go.html" . }}
+
 
 
