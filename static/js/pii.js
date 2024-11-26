@@ -2,10 +2,13 @@ document.addEventListener("DOMContentLoaded", function() {
     // Get the saved step from localStorage (if available)
     const savedStep = sessionStorage.getItem('currentStep') || 1;
     setCurrentStep(savedStep);
+    const form = document.getElementById('piiForm');
 
     // Populate PII form with saved data
-    populatePiiForm();
-    
+    if(form) {
+        populatePiiForm();
+    }
+
     // Toggle mobile menu
     const menuButton = document.getElementById('menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
@@ -69,6 +72,11 @@ function setCurrentStep(step) {
 
 // Function to populate PII form with saved data
 function populatePiiForm() {
+    const form = document.getElementById('piiForm');
+    if (!form) {
+        console.error("Form with id 'piiForm' not found in the DOM.");
+        return;
+    }
     const savedData = sessionStorage.getItem('piiData');
     if (savedData) {
         const formData = JSON.parse(savedData);
