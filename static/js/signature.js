@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const signatureName = sessionStorage.getItem('signatureName');
     const consentGiven = sessionStorage.getItem('consentGiven');
 
+    // TODO:Create block functions to structure the code and make it more readable
+
     if (signatureData) {
         // If signature data exists in sessionStorage, draw the signature on the canvas
         const img = new Image();
