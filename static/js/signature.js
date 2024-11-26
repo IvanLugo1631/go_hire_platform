@@ -84,62 +84,66 @@ document.addEventListener("DOMContentLoaded", () => {
         submitBtn.disabled = !isSigned;
     }
     submitBtn.disabled = true;
-});
 
-// Submit form and go to employment
-const submitFormAndGoToEmployment = () => {
-    const form = document.getElementById('signatureForm');
-    const formData = new FormData(form);
-    let hasError = false;
-
-    // Clear previous error styles
-    form.querySelectorAll('.error').forEach(el => {
-        el.classList.remove('error');
-    });
-
-    // Validate required fields
-    const requiredFields = form.querySelectorAll('[required]');
-    requiredFields.forEach(field => {
-        if (!field.value.trim()) {
-            field.classList.add('error');
-            hasError = true;
+    // Load form data from localStorage (if available)
+    const storedData = sessionStorage.getItem('piiData');
+    if (storedData) {
+        const formDataObject = JSON.parse(storedData);
+        for (const [key, value] of Object.entries(formDataObject)) {
+            const inputElement = document.querySelector(`[name="${key}"]`);
+            if (inputElement) {
+                inputElement.value = value;
+            }
         }
-    });
-
-    if (hasError) {
-        // Focus the first invalid field
-        const firstErrorField = form.querySelector('.error');
-        firstErrorField.focus();
-        return;
     }
 
-    // Proceed to submit the form if no errors
-    fetch('/signature', {
-        method: 'POST',
-        body: formData
-    })
-    .then(async response => {
-        if (!response.ok) {
-            const text = await response.text();
-            throw new Error(`HTTP error! status: ${response.status}, body: ${text}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            console.log('Server response:', data);
-            window.location.href = '/employment';
-            const currentStep = 3;
-            localStorage.setItem('currentStep', currentStep);
-            setCurrentStep(currentStep);
-        } else {
-            console.error('Server indicated failure:', data);
-            alert('There was an error saving your data: ' + (data.message || 'Unknown error'));
-        }
-    })
-    .catch(error => {
-        console.error('Error submitting form:', error);
-        alert('There was an error submitting the form: ' + error.message);
-    });
+    // Function to submit form and go to the employment page (if form is valid)
+    const submitFormAndGoToEmployment = () => {
+        const form = document.getElementById('signatureForm');
+        const formData = new FormData(form);
+        let hasError = false;
 
-};
+        // Clear previous error styles
+        form.querySelectorAll('.error').forEach(el => {
+            el.classList.remove('error');
+        });
+
+        // Validate required fields
+        const requiredFields = form.querySelectorAll('[required]');
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                hasError = true;
+            }
+        });
+
+        if (hasError) {
+            // Focus the first invalid field
+            const firstErrorField = form.querySelector('.error');
+            firstErrorField.focus();
+            return;
+        }
+    };
+
+
+    // Event listener for the back button
+    const backButton = document.getElementById('back-button');
+    if (backButton) {
+        backButton.addEventListener('click', goBackToPii);
+    }
+});
+
+    // Function to set the current step based on the saved step from localStorage
+function setCurrentStep(step) {
+    const stepElements = document.querySelectorAll('.step');
+    stepElements.forEach((element, index) => {
+        element.classList.toggle('active', index + 1 === step);
+    });
+}
+
+    // Function to go back to PII page from signature
+function goBackToPii() {
+    sessionStorage.setItem('currentStep', 1);
+    setCurrentStep(1);
+    window.location.href = '/personal-information';
+}
